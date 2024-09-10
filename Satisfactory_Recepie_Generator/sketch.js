@@ -3,37 +3,69 @@ let inpAmnt = 10;
 let path1;
 let pathsToItterate = [];
 let id = 0;
+let inputScreenObj;
 
 function setup()
 {
+  createCanvas(windowWidth, windowHeight);
   loadAllItems();
   loadAllRecipes();
   input = StringToItem(input);
-  let a = [];
   path1 = new Path(input, id, 0, inpAmnt);
   id++;
   path1.construct();
   pathsToItterate.push(path1);
-}
+  inputScreenObj = createInput("Type The Item You Want Recipies For Here");
+  inputScreenObj.size(260);
+  inputScreenObj.position(width/2 - 130, height/2)
+} 
 function draw()
 {
-}
-function mousePressed()
-{
-  let leg = pathsToItterate.length
-  for(let i = 0; i < leg; i++){
-    if(pathsToItterate[i].itterated == false){
-      pathsToItterate[i].itterate();
-    }
+  background(100);
+  textAlign(CENTER);
+  if(stringIsItem(inputScreenObj.value())){
+    input = inputScreenObj.value();
+  } else {
+    textSize(20);
+    text("Invalid Item Name", width/2, height/2 + 50);
   }
-  console.log(path1.branches);
+  textSize(30);
+  text("Press Enter To Get Results", width/2, height/2 - 30);
+}
+
+function displayOutput(){
+
+}
+
+function getOutput(){
+  path1 = new Path(input, id, 0, inpAmnt);
+  id++;
+  path1.construct();
+  for(let i = 0; i < 5; i++){
+    let leg = pathsToItterate.length
+    for(let i = 0; i < leg; i++){
+      if(pathsToItterate[i].itterated == false){
+        pathsToItterate[i].itterate();
+      }
+    }
+    console.log(path1.branches);
+  }
+  path1.instructions = [];
+  path1.constructInstructions(0);
 }
 function keyPressed(){
-  path1.instructions = [];
-  if(keyCode === 80){
-    path1.constructInstructions(0);
+  if(keyCode === 13 && stringIsItem(inputScreenObj.value() == true)){
+    console.log(1)
+    getOutput();
   }
-  console.log(path1.instructions);
+}
+function stringIsItem(str){
+  for(let i = 0; i < items.length; i++){
+    if(str == items[i].name){
+      return true;
+    }
+  }
+  return false;
 }
 function loadAllItems()
 {
